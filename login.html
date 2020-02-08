@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <img id='logo' src="F:\Uni Year 3\App Development\Coursework 2\Coursework 2 code\Images\Logo.png" alt="logo">
+    <link rel="stylesheet" href="Css.css" />
+    <title>Login</title>
+</head>
+
+<body>
+    <div id="signup"style="width:500px;margin:auto;">
+        <h1 style="text-align:center">Sign Up </h1>
+        <h2 id="regmessage"></h2>
+        <form>
+            <label for="email">Email</label>
+            <input required type="email" name="email" v-model="email">
+            <label for="password">Password</label>
+            <input required type="password" name="password" v-model="password">
+            <button v-on:click='signup'>signup</button>
+
+        </form>
+    </div>
+    <script>
+        var testing3 = new Vue({
+            el: '#signup',
+            data: {
+                email: '',
+                password: '',
+
+            },
+            methods: {
+                signup: function () {
+                    fetch(`http://localhost:3000/collections/users`, {
+                        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+
+                        body: JSON.stringify({ email: this.email, password: this.password })
+                    }).then(function (response) {
+                        return response.json()
+                    }).then(function (data) {
+                        console.log('post rest', data)
+                    })
+                    
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
