@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    div header,
+    aside,
+    main {
+        box-sizing: border-box;
+        margin: 2%;
+        padding: 10px;
+    }
+
+    header {
+        width: 95%;
+    }
+
+    #logo {
+        width: 100px;
+    }
+
+    #searchbox {
+        width: 300px;
+    }
+
+    #logo,
+    #searchbox {
+        height: 50px;
+        display: inline-block;
+    }
+
+    #hfont {
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+
+    button {
+        height: 10px;
+        margin: 20px;
+        padding: 10px;
+    }
+
+    aside {
+        width: 20%;
+        float: left;
+    }
+
+    main {
+        width: 70%;
+        margin-left: 25%;
+    }
+
+    .filter {
+        width: 80%;
+        min-height: 80px;
+    }
+
+    .product {
+        width: 200px;
+        height: 200px;
+        display: inline-block;
+    }
+
+    .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 20px;
+    }
+
+    div,
+    header,
+    aside,
+    main {
+        border: solid lightcoral;
+        box-sizing: border-box;
+        margin: 1%;
+        padding: 10px;
+        background-color: lightsteelblue;
+    }
+
+    header {
+        width: 95%;
+    }
+
+    #logo {
+        width: 150px;
+    }
+
+    #searchbox {
+        width: 300px;
+    }
+
+    #logo,
+    #searchbox {
+        height: 150px;
+        display: inline-block;
+    }
+
+    button {
+        height: 50px;
+        margin: 20px;
+        padding: 10px;
+    }
+
+    aside {
+        width: 10%;
+        float: left;
+    }
+
+    main {
+        width: 84%;
+        margin-left: 12%;
+    }
+
+    .filter {
+        width: 80%;
+        min-height: 80px;
+    }
+
+    .product {
+        width: 200px;
+        height: 200px;
+        display: inline-block;
+    }
+
+    .container {
+        display: grid;
+        grid-template-columns: 1fr 3fr 1fr;
+        gap: 20px;
+    }
+
+    header {
+        grid-column: 1/3;
+        grid-row: 1;
+    }
+
+    aside {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    main {
+        grid-column: 2;
+        grid-row: 2;
+    }
+
+    .course {
+        border: solid lightblue;
+        display: inline-block;
+        margin: 10px;
+        padding: 10px;
+    }
+</style>
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>Admin</title>
+</head>
+<h1 style="text-align:center">Admin</h1>
+
+<body>
+    <div id="deletecourse">
+        <form>
+            <h1>Delete a course</h1>
+            <label>id</label>
+            <input type="text" name="id" v-model="idDel">
+            <button v-on:click="deleteData">delete</button>
+        </form>
+    </div>
+
+    <div id="add">
+        <form>
+            <h1>Add Course</h1>
+
+            <label>topic</label>
+            <input type="text" name="topic" v-model="topic">
+            <label>location</label>
+            <input type="text" name="location" v-model="location">
+            <label>price</label>
+            <input type="text" name="price" v-model="price">
+            <button v-on:click="addData">add</button>
+        </form>
+    </div>
+
+    <div id="updatecourse">
+        <form>
+            <h1>Update</h1>
+            <label>id</label>
+            <input type="text" name="id" v-model="uid">
+            <label>topic</label>
+            <input type="text" name="id" v-model="utopic">
+            <label>price</label>
+            <input type="text" name="id" v-model="uprice">
+            <button v-on:click="updateData">update</button>
+        </form>
+    </div>
+
+    <div id="courses">
+        <div v-for="course in courses" class="courses">
+            <ul>
+                <li v-for='(value, name) in course'>
+                    {{name}}: {{value}}
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    <script>
+        fetch('http://localhost:3000/collections/courses').then(
+            function (response) {
+                response.text().then(
+                    function (text) {
+                        alert(text);
+                        testing.courses = JSON.parse(text);
+                    }).catch(function (err) {
+                        console.log('Fetch problem: ' + err.message);
+                    });
+
+
+                var testing = new Vue({
+                    el: '#courses',
+                    data: {
+                        name: '',
+                        value: '',
+                        courses: []
+                    }
+                })
+            },
+        )
+
+        var test1 = new Vue({
+            el: '#deletecourse',
+            data: {
+                idDel: '',
+            },
+            methods: {
+                deleteData: function () {
+                    var topicid = this.idDel
+
+
+                    fetch(`http://localhost:3000/collections/courses/${topicid}`, {
+                        method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
+                        headers: {
+
+                        },
+
+                        body: JSON.stringify({ id: this.idDel })
+                    }).then(function (response) {
+                        return response.json()
+                    }).then(function (data) {
+                        console.log('post rest', data)
+                    })
+
+                }
+            }
+        })
+
+        var test2 = new Vue({
+            el: '#updatecourse',
+            data: {
+                uid: '',
+                utopic: '',
+                uprice: '',
+            },
+            methods: {
+                updateData: function () {
+                    var topic = this.utopic
+                    var price = this.uprice
+                    var topicid = this.uid
+                    fetch(`http://localhost:3000/collections/courses/${topicid}`, {
+                        method: 'PUT', // *GET, POST, PUT, DELETE, etc.
+                        headers: {
+
+                        },
+
+                        body: JSON.stringify({ topic: this.utopic, price: this.uprice })
+                    }).then(function (response) {
+                        return response.json()
+                    }).then(function (data) {
+                        console.log('post rest', data)
+                    })
+
+                }
+            }
+        })
+
+        var test4 = new Vue({
+            el: '#add',
+            data: {
+                id: '',
+                topic: '',
+                location: '',
+                price: '',
+            },
+            methods: {
+                addData: function () {
+                    fetch(`http://localhost:3000/collections/courses/`, {
+                        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+
+                        body: JSON.stringify({ topic: this.topic, location: this.location, price: this.price })
+                    }).then(function (response) {
+                        return response.json()
+                    }).then(function (data) {
+                        console.log('post rest', data)
+                    })
+
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
